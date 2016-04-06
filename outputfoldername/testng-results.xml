@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="TestScriptFiles" duration-ms="79730" started-at="2016-04-06T10:13:02Z" finished-at="2016-04-06T10:14:22Z">
+    <groups>
+    </groups>
+    <test name="framework" duration-ms="79730" started-at="2016-04-06T10:13:02Z" finished-at="2016-04-06T10:14:22Z">
+      <class name="TestScriptFiles.UserScenario">
+        <test-method status="PASS" signature="loginPage()[pri:0, instance:TestScriptFiles.UserScenario@69997e9d]" name="loginPage" duration-ms="79712" started-at="2016-04-06T15:43:02Z" finished-at="2016-04-06T15:44:22Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- loginPage -->
+      </class> <!-- TestScriptFiles.UserScenario -->
+    </test> <!-- framework -->
+  </suite> <!-- TestScriptFiles -->
+</testng-results>
