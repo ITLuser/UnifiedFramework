@@ -39,7 +39,7 @@ public class ScriptRunner {
 	public static void tearDown() {
 		if(driver!=null) {
 			System.out.println("Closing chrome browser");
-			//driver.quit();
+			driver.quit();
 		}
 	}
 	
