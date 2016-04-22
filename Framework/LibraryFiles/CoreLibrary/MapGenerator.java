@@ -1,10 +1,14 @@
 package LibraryFiles.CoreLibrary;
 
+import java.awt.Window;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import com.sun.jna.platform.win32.Guid.GUID;
+
 import jxl.read.biff.BiffException;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -14,43 +18,51 @@ public class MapGenerator {
 	public static FileInputStream fileInput;
 	public static Workbook workBook;
 	public static Sheet sheetName;
-	public static LinkedHashMap<String, String> testExecutionList = new LinkedHashMap<String, String>();	
+	public static LinkedHashMap<String, String> testExecutionList = new LinkedHashMap<String, String>();
 	public static List< LinkedHashMap<String, String> > testData = new ArrayList< LinkedHashMap<String, String> >();
 	public static String current = System.getProperty("user.dir");
 	public static String excelCommonDataPath = current.concat("\\Framework\\DataSets\\CommonData.xls");
-	public static String excelTestScriptExecutionPath = current.concat("\\Framework\\DataSets\\TestScriptExecution.xls");
+	//public static String excelTestScriptExecutionPath = current.concat("\\Framework\\DataSets\\TestScriptExecution.xls");
 	public static String excelTestDataPath = current.concat("\\Framework\\DataSets\\TestData.xls");
 	
+	
 	// function to generate maps to store the excel data
-	public static void GenerateTestExecutionList() throws BiffException, IOException{
+	public static void GenerateTestExecutionList(String text) throws BiffException, IOException{
+				
+		//int totalNoOfRows;
+		//String excelCommonDataSheetName = "MapGeneration";
 		
-		int totalNoOfRows;
-		String excelCommonDataSheetName = "MapGeneration";
-		
-		fileInput = new FileInputStream(excelCommonDataPath);
-		workBook = Workbook.getWorkbook(fileInput);
-		sheetName = workBook.getSheet(excelCommonDataSheetName);
-		totalNoOfRows = sheetName.getRows();
-		List<String> listName = new ArrayList<String>();
-		List<String> listValue = new ArrayList<String>();
+		//fileInput = new FileInputStream(excelCommonDataPath);
+		//workBook = Workbook.getWorkbook(fileInput);
+		//sheetName = workBook.getSheet(excelCommonDataSheetName);
+		//totalNoOfRows = sheetName.getRows();
+		//List<String> listName = new ArrayList<String>();
+		//List<String> listValue = new ArrayList<String>();
 		
 		// read values from excel and store it in list to generate the map
-		for (int i=1; i<totalNoOfRows; i++){
-			listName.add(sheetName.getCell(0,i).getContents());
-			listValue.add(sheetName.getCell(1,i).getContents());
-		}
+		//for (int i=1; i<totalNoOfRows; i++){
+			//listName.add(sheetName.getCell(0,i).getContents());
+			//listValue.add(sheetName.getCell(1,i).getContents());
+		//}
 		
 		// generate Map for Script execution list
-		fileInput = new FileInputStream(excelTestScriptExecutionPath);
-		workBook = Workbook.getWorkbook(fileInput);
-		sheetName = workBook.getSheet("Suite");
-		totalNoOfRows = sheetName.getRows();
-		for (int i=1; i<totalNoOfRows; i++){
-			if (sheetName.getCell(2, i).getContents().toString().equalsIgnoreCase("Yes")){
-				testExecutionList.put(sheetName.getCell(0, i).getContents(), sheetName.getCell(1, i).getContents());
-			}
-		}
+		//fileInput = new FileInputStream(excelTestScriptExecutionPath);
+		//workBook = Workbook.getWorkbook(fileInput);
+		//sheetName = workBook.getSheet("Suite");
+		//totalNoOfRows = sheetName.getRows();
+		//for (int i=1; i<totalNoOfRows; i++){
+			//if (sheetName.getCell(2, i).getContents().toString().equalsIgnoreCase("Yes")){
+				//testExecutionList.put(sheetName.getCell(0, i).getContents(), sheetName.getCell(1, i).getContents());
+			//}
+		//}
 		
+		// generate Map for UI Frame execution 
+		String[] arrayList = text.split("~");
+		
+		for (int i=0; i<arrayList.length; i++){
+				testExecutionList.put(Integer.toString(i+1), arrayList[i]);
+		}
+				
 	}
 	
 	public static void GenerateTestData(String TestScriptID) throws BiffException, IOException{

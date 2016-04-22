@@ -1,8 +1,9 @@
 package LibraryFiles.CoreLibrary;
 
+
+
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,18 +21,10 @@ import javax.xml.transform.stream.StreamResult;
 
 import jxl.read.biff.BiffException;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.testng.TestListenerAdapter;
-import org.testng.TestNG;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class DriverScript {
@@ -41,29 +34,35 @@ public class DriverScript {
 	public static LinkedHashMap<String, String> testDataMap = null;
 	public static List< LinkedHashMap<String, String> > testDataList = null;	
 	
+	
 	@SuppressWarnings({ "static-access" })
-	public static void main(String args[]) throws BiffException, IOException, ParserConfigurationException, TransformerException, SAXException{
-				
+	public static void startExecution(String testScripts) throws BiffException, IOException, ParserConfigurationException, TransformerException, SAXException{
+		
 		MapGenerator MapGen = new MapGenerator();
 		Reporter Report = new Reporter();
 		
+		
 		// Calling to Create Map for the list of Test Script Executions
-		MapGen.GenerateTestExecutionList();
+		MapGen.GenerateTestExecutionList(testScripts);
 		Report.generateSummaryReport();
 		Set setOfKeys = MapGen.testExecutionList.keySet();
 		Iterator iterator = setOfKeys.iterator();
 		while (iterator.hasNext()){
 			// Store the test script id
-			String TestID = (String) iterator.next();
+			String ID = (String) iterator.next();
 			// Store the test description for the given test id
-			String TestDescription = (String) MapGen.testExecutionList.get(TestID);
+			String TestID = (String) MapGen.testExecutionList.get(ID);
 			// Generate Detailed Report temp file
-			Report.generateDetailedReport(TestID,TestDescription);
+			//Report.generateDetailedReport(TestID,"GUI change");
 			// generate test data map inside a list for multiple iteration
 			MapGen.GenerateTestData(TestID);			
 			
 			testDataList = MapGen.testData;
 			testDataMap = testDataList.get(0);
+			
+			String TestDescription = (String) testDataMap.get("Test Description");
+			Report.generateDetailedReport(TestID,TestDescription);
+			
 			ScriptRunner.driverSetup();
 			
 			for (int i=1; i<Integer.parseInt(testDataMap.get("FlowCounts"))+1; i++){				
@@ -71,14 +70,22 @@ public class DriverScript {
 				if(testDataMap.containsKey(tempKey)){
 					generateTestngXML(tempKey);
 					ScriptRunner.beginTest();
+					if (Report.skipTestScript.equals(true)){
+						Report.skipTestScript = false;
+						Report.detailedReportEvent("Since certain exception occured, Test Script has been Interrupted","Interruption");
+						break;
+					} 
 				}
 			}
+			
 			ScriptRunner.tearDown();
 			Report.generateDetailedHTML();
 			Report.summaryReportEvent();
 			cleanup();
 		}
+
 		Report.generateSummaryHTML();
+		
 	}
 	
 	private static void cleanup() {
@@ -160,5 +167,5 @@ public class DriverScript {
 		transformer.transform(source, result);		
 			    
 	}
-	
+		
 }

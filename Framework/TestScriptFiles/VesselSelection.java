@@ -20,6 +20,7 @@ public class VesselSelection{
 	@Test
 	public void searchOption()throws ParserConfigurationException, SAXException, IOException, TransformerException, InterruptedException{
 		
+		try{
 	//Enter any Vessel's name in the search bar at the top right corner, For Example - Horizon Pacific, in 'Managed Ships' panel 
 		ScriptRunner.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         WebElement search = ScriptRunner.driver.findElement(By.xpath(".//*[@id='workspace']/div[1]/div/div/div[3]/div/div[1]/div[1]/div[2]/input"));
@@ -36,22 +37,26 @@ public class VesselSelection{
         else{
         	Reporter.detailedReportEvent("Shipname, along with other informations for the respective ship, is not displayed in only one row", "Fail");
         }
-        
+		}
+        catch(Exception e){
+        	Reporter.detailedReportEvent(e.getMessage().substring(0, 150)+"", "Exception");
+        }
         
 }
 	@Test
 	public void searchedvessel()throws ParserConfigurationException, SAXException, IOException, TransformerException, InterruptedException{
 		
+		try{
         ScriptRunner.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     //Click the filtered Vessel Profile  
         WebElement shipViewer = ScriptRunner.driver.findElement(By.xpath("html/body/div[4]/div[5]/div[1]/div/div/div[3]/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/div/div/div[1]/div"));
         shipViewer.click();
-        //Reporter.detailedReportEvent("Filtered Vessel clicked ", "Pass");
+        Reporter.detailedReportEvent("Filtered Vessel clicked ", "Pass");
         
    //Click Eye Shaped button on the top left corner      
         WebElement search = ScriptRunner.driver.findElement(By.xpath("html/body/div[4]/div[5]/div[1]/div/div/div[3]/div/div[1]/div[1]/div[1]/button"));
         search.click();
-        //Reporter.detailedReportEvent("Eyed Shaped Button clicked ", "Pass");
+        Reporter.detailedReportEvent("Eyed Shaped Button clicked ", "Pass");
         
    
         
@@ -60,14 +65,14 @@ public class VesselSelection{
      
         WebElement shipProfile = ScriptRunner.driver.findElement(By.xpath(".//*[@id='workspace']/div[1]/div/div/div[3]/div/div/canvas[2]"));
         if (shipProfile.isDisplayed()){
-        	//Reporter.detailedReportEvent("Ship Profile - 'Selected Vessel Name' is displayed", "Pass");
+        	Reporter.detailedReportEvent("Ship Profile - 'Selected Vessel Name' is displayed", "Pass");
         }
         else{
-        	//Reporter.detailedReportEvent("Ship Profile - 'Selected Vessel Name' is not displayed", "Fail");
+        	Reporter.detailedReportEvent("Ship Profile - 'Selected Vessel Name' is not displayed", "Fail");
         }
-        
-	
 	}
-	
-
+        catch(Exception e){
+        	Reporter.detailedReportEvent(e.getMessage().substring(0, 150)+"", "Exception");
+        }
+}
 }

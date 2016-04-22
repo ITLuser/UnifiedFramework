@@ -20,6 +20,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import junit.framework.Assert;
+
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -49,6 +51,7 @@ public class Reporter {
 	public static String testEndTime;
 	public static String HTMLReportPath;
 	public static String screenshotreportpath;
+	public static Boolean skipTestScript = false;
 	static String singleFailure = "Pass";
 	
 	Reporter(){
@@ -166,6 +169,10 @@ public class Reporter {
 			Element ScreenshotimagePath = doc.createElement("ScreenshotimagePath");
 			ScreenshotimagePath.appendChild(doc.createTextNode(screenshotreportpath));
 			stepDetails.appendChild(ScreenshotimagePath);
+		}
+        
+		if (stepStatus.equals ("Exception")){
+			skipTestScript = true;
 		}
 		
 		testEndTime = dateFormat.format(date);
