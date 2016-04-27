@@ -48,7 +48,7 @@
               <ul>
                 <li>
                   <a href="#" class="navigator-link " panel-name="test-xml-Default_suite">
-                    <span>C:\Users\itluser\AppData\Local\Temp\testng-eclipse-1501347872\testng-customsuite.xml</span>
+                    <span>C:\Users\itluser\AppData\Local\Temp\testng-eclipse-1968867777\testng-customsuite.xml</span>
                   </a> <!-- navigator-link  -->
                 </li>
                 <li>
@@ -132,11 +132,9 @@
                   <a name="loginPage">
                   </a> <!-- loginPage -->
                   <span class="method-name">loginPage</span>
-                  <div class="stack-trace">java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-	at java.util.ArrayList.rangeCheck(Unknown Source)
-	at java.util.ArrayList.get(Unknown Source)
-	at LibraryFiles.CoreLibrary.ScriptRunner.fetchData(ScriptRunner.java:50)
-	at TestScriptFiles.UserScenario.loginPage(UserScenario.java:28)
+                  <div class="stack-trace">java.lang.StringIndexOutOfBoundsException: String index out of range: 150
+	at java.lang.String.substring(Unknown Source)
+	at TestScriptFiles.UserScenario.loginPage(UserScenario.java:63)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -171,7 +169,7 @@
                   </a> <!-- logoutPage -->
                   <span class="method-name">logoutPage</span>
                   <div class="stack-trace">java.lang.NullPointerException
-	at TestScriptFiles.UserScenario.logoutPage(UserScenario.java:61)
+	at TestScriptFiles.UserScenario.logoutPage(UserScenario.java:93)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -205,7 +203,7 @@
         </div> <!-- panel Default_suite -->
         <div panel-name="test-xml-Default_suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">C:\Users\itluser\AppData\Local\Temp\testng-eclipse-1501347872\testng-customsuite.xml</span>
+            <span class="header-content">C:\Users\itluser\AppData\Local\Temp\testng-eclipse-1968867777\testng-customsuite.xml</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <pre>
@@ -258,7 +256,7 @@ data.addRows(2);
 data.setCell(0, 0, 0)
 data.setCell(0, 1, 'loginPage')
 data.setCell(0, 2, 'TestScriptFiles.UserScenario')
-data.setCell(0, 3, 28);
+data.setCell(0, 3, 26);
 data.setCell(1, 0, 1)
 data.setCell(1, 1, 'logoutPage')
 data.setCell(1, 2, 'TestScriptFiles.UserScenario')
@@ -267,7 +265,7 @@ window.suiteTableData['Default_suite']= { tableData: data, tableDiv: 'times-div-
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 29 ms</span>
+              <span class="suite-total-time">Total running time: 27 ms</span>
               <div id="times-div-Default_suite">
               </div> <!-- times-div-Default_suite -->
             </div> <!-- times-div -->
@@ -304,7 +302,7 @@ return data;
                 <img src="failed.png">
                 </img>
                 <span class="method-name">logoutPage</span>
-                <span class="method-start">34 ms</span>
+                <span class="method-start">33 ms</span>
               </div> <!-- test-method -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->

@@ -105,8 +105,7 @@ th, td {
 						<xsl:variable name="hyperlink"><xsl:value-of select="ScreenshotimagePath" /></xsl:variable>
 						<td><a href="{$hyperlink}" style="color:#d9534f;"> <xsl:value-of select="@ScreenshotimagePath" /><b><xsl:value-of select="StepStatus"/></b></a></td>
 						<td><b><xsl:value-of select="StepTime"/></b></td>
-					</tr>
-					
+					</tr>					
 				</xsl:if>
 				<xsl:if test="StepStatus = 'Pass'">
 					<tr>
@@ -115,7 +114,6 @@ th, td {
 						<td><b><xsl:value-of select="StepStatus"/></b></td>
 						<td><b><xsl:value-of select="StepTime"/></b></td>
 					</tr>
-					
 				</xsl:if>
 				<xsl:if test="StepStatus = ' -- '">
 					<tr class="bgflow">
@@ -133,7 +131,15 @@ th, td {
 						<td><a href="{$hyperlink}" style="color:#d9534f;"> <xsl:value-of select="@ScreenshotimagePath" /><b><xsl:value-of select="StepStatus"/></b></a></td>
 						<td><b><xsl:value-of select="StepTime"/></b></td>
 					</tr>
-					</xsl:if>
+				</xsl:if>
+				<xsl:if test="StepStatus = 'Interruption'">
+					<tr class="bgdanger">
+						<td><b><xsl:value-of select="StepNumber"/></b></td>
+						<td><b><xsl:value-of select="StepDesc"/></b></td>
+						<td><b><xsl:value-of select="StepStatus"/></b></td>
+						<td><b><xsl:value-of select="StepTime"/></b></td>
+					</tr>
+				</xsl:if>		
 			</xsl:for-each>
 		</table>
 		</div>

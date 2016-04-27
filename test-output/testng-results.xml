@@ -2,22 +2,20 @@
 <testng-results skipped="0" failed="2" total="2" passed="0">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="71" started-at="2016-03-07T09:04:37Z" finished-at="2016-03-07T09:04:37Z">
+  <suite name="Default suite" duration-ms="63" started-at="2016-04-22T09:41:22Z" finished-at="2016-04-22T09:41:22Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="71" started-at="2016-03-07T09:04:37Z" finished-at="2016-03-07T09:04:37Z">
+    <test name="Default test" duration-ms="63" started-at="2016-04-22T09:41:22Z" finished-at="2016-04-22T09:41:22Z">
       <class name="TestScriptFiles.UserScenario">
-        <test-method status="FAIL" signature="loginPage()[pri:0, instance:TestScriptFiles.UserScenario@5c0369c4]" name="loginPage" duration-ms="28" started-at="2016-03-07T14:34:37Z" finished-at="2016-03-07T14:34:37Z">
-          <exception class="java.lang.IndexOutOfBoundsException">
+        <test-method status="FAIL" signature="loginPage()[pri:0, instance:TestScriptFiles.UserScenario@5a39699c]" name="loginPage" duration-ms="26" started-at="2016-04-22T15:11:22Z" finished-at="2016-04-22T15:11:22Z">
+          <exception class="java.lang.StringIndexOutOfBoundsException">
             <message>
-              <![CDATA[Index: 0, Size: 0]]>
+              <![CDATA[String index out of range: 150]]>
             </message>
             <full-stacktrace>
-              <![CDATA[java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-	at java.util.ArrayList.rangeCheck(Unknown Source)
-	at java.util.ArrayList.get(Unknown Source)
-	at LibraryFiles.CoreLibrary.ScriptRunner.fetchData(ScriptRunner.java:50)
-	at TestScriptFiles.UserScenario.loginPage(UserScenario.java:28)
+              <![CDATA[java.lang.StringIndexOutOfBoundsException: String index out of range: 150
+	at java.lang.String.substring(Unknown Source)
+	at TestScriptFiles.UserScenario.loginPage(UserScenario.java:63)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -44,15 +42,15 @@
 	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175)
 ]]>
             </full-stacktrace>
-          </exception> <!-- java.lang.IndexOutOfBoundsException -->
+          </exception> <!-- java.lang.StringIndexOutOfBoundsException -->
           <reporter-output>
           </reporter-output>
         </test-method> <!-- loginPage -->
-        <test-method status="FAIL" signature="logoutPage()[pri:0, instance:TestScriptFiles.UserScenario@5c0369c4]" name="logoutPage" duration-ms="1" started-at="2016-03-07T14:34:37Z" finished-at="2016-03-07T14:34:37Z">
+        <test-method status="FAIL" signature="logoutPage()[pri:0, instance:TestScriptFiles.UserScenario@5a39699c]" name="logoutPage" duration-ms="1" started-at="2016-04-22T15:11:22Z" finished-at="2016-04-22T15:11:22Z">
           <exception class="java.lang.NullPointerException">
             <full-stacktrace>
               <![CDATA[java.lang.NullPointerException
-	at TestScriptFiles.UserScenario.logoutPage(UserScenario.java:61)
+	at TestScriptFiles.UserScenario.logoutPage(UserScenario.java:93)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)

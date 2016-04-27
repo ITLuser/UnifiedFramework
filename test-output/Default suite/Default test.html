@@ -57,9 +57,9 @@ function toggleAllBoxes() {
 <tr>
 <td>Tests passed/Failed/Skipped:</td><td>0/2/0</td>
 </tr><tr>
-<td>Started on:</td><td>Mon Mar 07 14:34:37 IST 2016</td>
+<td>Started on:</td><td>Fri Apr 22 15:11:22 IST 2016</td>
 </tr>
-<tr><td>Total time:</td><td>0 seconds (71 ms)</td>
+<tr><td>Total time:</td><td>0 seconds (63 ms)</td>
 </tr><tr>
 <td>Included groups:</td><td></td>
 </tr><tr>
@@ -76,11 +76,9 @@ function toggleAllBoxes() {
 </tr>
 <tr>
 <td title='TestScriptFiles.UserScenario.loginPage()'><b>loginPage</b><br>Test class: TestScriptFiles.UserScenario</td>
-<td><div><pre>java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-	at java.util.ArrayList.rangeCheck(Unknown Source)
-	at java.util.ArrayList.get(Unknown Source)
-	at LibraryFiles.CoreLibrary.ScriptRunner.fetchData(ScriptRunner.java:50)
-	at TestScriptFiles.UserScenario.loginPage(UserScenario.java:28)
+<td><div><pre>java.lang.StringIndexOutOfBoundsException: String index out of range: 150
+	at java.lang.String.substring(Unknown Source)
+	at TestScriptFiles.UserScenario.loginPage(UserScenario.java:63)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -105,12 +103,10 @@ function toggleAllBoxes() {
 	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:111)
 	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:204)
 	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175)
-</pre></div><a href='#' onClick='toggleBox("stack-trace796533847", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
-<div class='stack-trace' id='stack-trace796533847'><pre>java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-	at java.util.ArrayList.rangeCheck(Unknown Source)
-	at java.util.ArrayList.get(Unknown Source)
-	at LibraryFiles.CoreLibrary.ScriptRunner.fetchData(ScriptRunner.java:50)
-	at TestScriptFiles.UserScenario.loginPage(UserScenario.java:28)
+</pre></div><a href='#' onClick='toggleBox("stack-trace1007251739", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1007251739'><pre>java.lang.StringIndexOutOfBoundsException: String index out of range: 150
+	at java.lang.String.substring(Unknown Source)
+	at TestScriptFiles.UserScenario.loginPage(UserScenario.java:63)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -137,11 +133,11 @@ function toggleAllBoxes() {
 	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175)
 </pre></div></td>
 <td>0</td>
-<td>TestScriptFiles.UserScenario@5c0369c4</td></tr>
+<td>TestScriptFiles.UserScenario@5a39699c</td></tr>
 <tr>
 <td title='TestScriptFiles.UserScenario.logoutPage()'><b>logoutPage</b><br>Test class: TestScriptFiles.UserScenario</td>
 <td><div><pre>java.lang.NullPointerException
-	at TestScriptFiles.UserScenario.logoutPage(UserScenario.java:61)
+	at TestScriptFiles.UserScenario.logoutPage(UserScenario.java:93)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -166,9 +162,9 @@ function toggleAllBoxes() {
 	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:111)
 	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:204)
 	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175)
-</pre></div><a href='#' onClick='toggleBox("stack-trace440434003", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
-<div class='stack-trace' id='stack-trace440434003'><pre>java.lang.NullPointerException
-	at TestScriptFiles.UserScenario.logoutPage(UserScenario.java:61)
+</pre></div><a href='#' onClick='toggleBox("stack-trace95395916", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace95395916'><pre>java.lang.NullPointerException
+	at TestScriptFiles.UserScenario.logoutPage(UserScenario.java:93)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
@@ -195,7 +191,7 @@ function toggleAllBoxes() {
 	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175)
 </pre></div></td>
 <td>0</td>
-<td>TestScriptFiles.UserScenario@5c0369c4</td></tr>
+<td>TestScriptFiles.UserScenario@5a39699c</td></tr>
 </table><p>
 </body>
 </html>

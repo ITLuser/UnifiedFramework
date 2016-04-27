@@ -5,7 +5,7 @@
     <classes>
       <class name="TestScriptFiles.UserScenario">
         <methods>
-          <include name="loginPage"/>
+          <include name="logoutPage"/>
         </methods>
       </class> <!-- TestScriptFiles.UserScenario -->
     </classes>

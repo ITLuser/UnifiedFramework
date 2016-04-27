@@ -20,6 +20,7 @@ public class MapGenerator {
 	public static Sheet sheetName;
 	public static LinkedHashMap<String, String> testExecutionList = new LinkedHashMap<String, String>();
 	public static List< LinkedHashMap<String, String> > testData = new ArrayList< LinkedHashMap<String, String> >();
+	public static LinkedHashMap<String, String> notestcaseid = new LinkedHashMap<String, String>();
 	public static String current = System.getProperty("user.dir");
 	public static String excelCommonDataPath = current.concat("\\Framework\\DataSets\\CommonData.xls");
 	//public static String excelTestScriptExecutionPath = current.concat("\\Framework\\DataSets\\TestScriptExecution.xls");
@@ -140,4 +141,16 @@ public class MapGenerator {
 		testData.get(0).put("FlowCounts",Integer.toString(flowCount));
 	}
 	
+	public static void MapForTCID() throws BiffException, IOException{
+		int totalNoOfRows;
+		fileInput = new FileInputStream(excelTestDataPath);
+				workBook = Workbook.getWorkbook(fileInput);
+				sheetName = workBook.getSheet("Business Flow");
+				totalNoOfRows = sheetName.getRows();
+				for (int i=1; i<totalNoOfRows; i++){
+					if (!sheetName.getCell(0, i).getContents().equals("")){
+						notestcaseid.put(Integer.toString(i), sheetName.getCell(0, i).getContents());
+					}
+				}
+	}
 }
