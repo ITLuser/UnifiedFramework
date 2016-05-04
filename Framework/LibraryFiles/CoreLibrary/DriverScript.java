@@ -33,7 +33,7 @@ public class DriverScript {
 	public static String testngXmlPath = current.concat("\\Framework\\LibraryFiles\\CoreLibrary\\testing.xml");
 	public static LinkedHashMap<String, String> testDataMap = null;
 	public static List< LinkedHashMap<String, String> > testDataList = null;	
-	
+	public static boolean hasToSendMail = false;
 	
 	@SuppressWarnings({ "static-access" })
 	public static void startExecution(String testScripts) throws BiffException, IOException, ParserConfigurationException, TransformerException, SAXException{
@@ -43,7 +43,7 @@ public class DriverScript {
 		
 		
 		// Calling to Create Map for the list of Test Script Executions
-		MapGen.GenerateTestExecutionList(testScripts);
+		//MapGen.GenerateTestExecutionList(testScripts);
 		Report.generateSummaryReport();
 		Set setOfKeys = MapGen.testExecutionList.keySet();
 		Iterator iterator = setOfKeys.iterator();
@@ -62,6 +62,7 @@ public class DriverScript {
 			
 			String TestDescription = (String) testDataMap.get("Test Description");
 			Report.generateDetailedReport(TestID,TestDescription);
+			Report.insertTestInSummaryReport();
 			
 			ScriptRunner.driverSetup();
 			
@@ -79,12 +80,15 @@ public class DriverScript {
 			}
 			
 			ScriptRunner.tearDown();
-			Report.generateDetailedHTML();
+			//Report.generateDetailedHTML();
 			Report.summaryReportEvent();
 			cleanup();
 		}
 
 		Report.generateSummaryHTML();
+		if (hasToSendMail == true){
+			Report.sendMail();
+		}
 		
 	}
 	

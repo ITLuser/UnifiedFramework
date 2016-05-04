@@ -1,16 +1,34 @@
 package LibraryFiles.CoreLibrary;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.TimeZone;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Message; 
+import javax.mail.MessagingException; 
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication; 
+import javax.mail.Session; 
+import javax.mail.Transport; 
+import javax.mail.internet.InternetAddress; 
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage; 
+import javax.mail.internet.MimeMultipart;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,8 +48,18 @@ import org.testng.ITestResult;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import ch.elca.el4j.services.xmlmerge.AbstractXmlMergeException;
+import ch.elca.el4j.services.xmlmerge.Mapper;
+import ch.elca.el4j.services.xmlmerge.MergeAction;
+import ch.elca.el4j.services.xmlmerge.XmlMerge;
+
+import com.sun.xml.internal.ws.api.server.Module;
 
 public class Reporter {
 	
@@ -50,8 +78,13 @@ public class Reporter {
 	public static String testStartTime;
 	public static String testEndTime;
 	public static String HTMLReportPath;
+	public static String HTMLSummaryReportPath;
 	public static String screenshotreportpath;
 	public static Boolean skipTestScript = false;
+	public static Integer totalpassedScripts = 0;
+	public static Integer totalfailedScripts = 0;
+	public static Integer failedDueToExceptionScripts = 0;
+	public static String summaryDescription = null;
 	static String singleFailure = "Pass";
 	
 	Reporter(){
@@ -78,7 +111,7 @@ public class Reporter {
 		
 		// root elements
 		Document doc = docBuilder.newDocument();
-		Element rootElement = doc.createElement("Test");
+		Element rootElement = doc.createElement("TestSteps");				
 		doc.appendChild(rootElement);
 
 		Element testDetails = doc.createElement( "Details" );
@@ -121,7 +154,10 @@ public class Reporter {
 		transformer.transform(source, result);
 		TestID = TCID;
 		TestDescription = TCDescription;
-
+		
+		File file = new File(detailedReportsPath); 
+		file.delete();
+		
 	}
 	
 	public static void detailedReportEvent(String stepDescription, String stepStatus) throws ParserConfigurationException, SAXException, IOException, TransformerException{
@@ -131,9 +167,22 @@ public class Reporter {
 		
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(detailedReportsPath);
+		// changed the path for detailed xml file to summary report xml file to have single file
+		Document doc = docBuilder.parse(summaryReportPath);
 		
-		Node root = doc.getFirstChild(); 
+		Node root = doc.getFirstChild();
+		
+		NodeList nodes = doc.getElementsByTagName("Tests");
+		
+		for (int i = 0; i<nodes.getLength(); i++){
+			Element node = (Element) nodes.item(i);
+			NamedNodeMap attr = node.getAttributes();
+			Node nodeAttr = attr.getNamedItem("Id");
+			if (TestID.equalsIgnoreCase(nodeAttr.getTextContent())){
+				root = nodes.item(i);
+				break;
+			}
+		}
 		
 		Element stepDetails = doc.createElement( "Steps" );
 		
@@ -195,7 +244,7 @@ public class Reporter {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		DOMSource source = new DOMSource(doc);
-		StreamResult result = new StreamResult(new File(detailedReportsPath));
+		StreamResult result = new StreamResult(new File(summaryReportPath));
 		transformer.transform(source, result);
 		
 	}
@@ -249,7 +298,7 @@ public class Reporter {
 		testduration.appendChild(doc.createTextNode("Need to incorporate"));
 		suiteDetails.appendChild(testduration);
 		
-		rootElement.appendChild(suiteDetails);
+		rootElement.appendChild(suiteDetails);		
 		
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -259,6 +308,27 @@ public class Reporter {
 		DOMSource source = new DOMSource(doc);
 		StreamResult result = new StreamResult(new File(summaryReportPath));
 
+		transformer.transform(source, result);
+		
+	}
+	
+	public static void insertTestInSummaryReport() throws ParserConfigurationException, TransformerException, DOMException, UnknownHostException,SAXException,IOException{
+
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document doc = docBuilder.parse(summaryReportPath);
+		
+		Node root = doc.getFirstChild(); 
+		
+		Element test = doc.createElement( "Tests" );
+		test.setAttribute("Id", TestID);
+
+		root.appendChild(test);		
+
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(new File(summaryReportPath));
 		transformer.transform(source, result);
 		
 	}
@@ -274,7 +344,19 @@ public class Reporter {
 		
 		Node root = doc.getFirstChild(); 
 		
-		Element testDetails = doc.createElement( "Tests" );
+		NodeList nodes = doc.getElementsByTagName("Tests");
+		
+		for (int i = 0; i<nodes.getLength(); i++){
+			Element node = (Element) nodes.item(i);
+			NamedNodeMap attr = node.getAttributes();
+			Node nodeAttr = attr.getNamedItem("Id");
+			if (TestID.equalsIgnoreCase(nodeAttr.getTextContent())){
+				root = nodes.item(i);
+				break;
+			}
+		}
+		
+		Element testDetails = doc.createElement( "TestsDetails" );
 		
 		Element sNo = doc.createElement("sNo");
 		sNo.appendChild(doc.createTextNode(testNo.toString()));
@@ -296,13 +378,22 @@ public class Reporter {
 		TestTime.appendChild(doc.createTextNode(testStartTime));
 		testDetails.appendChild(TestTime);
 		
-		Element TestHtmlPath = doc.createElement("HTMLPath");
+/*		Element TestHtmlPath = doc.createElement("HTMLPath");
 		TestHtmlPath.appendChild(doc.createTextNode(HTMLReportPath));
-		testDetails.appendChild(TestHtmlPath);
+		testDetails.appendChild(TestHtmlPath);*/
 
 		root.appendChild(testDetails);
 		
 		testNo++;
+		if (testStatus.equals("Pass")){
+			totalpassedScripts++;
+		}
+		if (testStatus.equals("Fail")){
+			totalfailedScripts++;
+		}
+		if (testStatus.equals("Exception")){
+			failedDueToExceptionScripts++;
+		}
 		
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
@@ -322,8 +413,11 @@ public class Reporter {
 	    transformer.transform (new javax.xml.transform.stream.StreamSource (summaryReportPath),
 	    		new javax.xml.transform.stream.StreamResult ( new FileOutputStream(exceutionReportFolder + "\\SummaryReport.html")));
 
+	    HTMLSummaryReportPath = exceutionReportFolder + "\\SummaryReport.html";
+	    
 		File file = new File(summaryReportPath); 
 		file.delete();
+
 		
 	}
 	
@@ -336,4 +430,72 @@ public class Reporter {
 		screenshotreportpath = failedTestFolderpPath + "\\Step-" +StepNo + ".png";
 		
 	}
+
+	public static void sendMail(){
+		//change accordingly	
+		final String username = "vasantham.puyalnithi@idealtechlabs.com"; 
+		final String password = "Kingsword_2";
+		//Set properties 
+		Properties props = new Properties(); 
+		props.put("mail.smtp.auth", "true"); 
+		props.put("mail.smtp.host", MapGenerator.commonData.get("SMTP_HOST"));  
+		props.put("mail.smtp.port", MapGenerator.commonData.get("SMTP_PORT"));
+		// Get the Session object. 
+		Session session = Session.getInstance(props, new javax.mail.Authenticator() { 
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password); } 
+			});   
+			try { 
+				//Compose the message 
+				Message message = new MimeMessage(session); 
+				message.setFrom(new InternetAddress(MapGenerator.commonData.get("FROM"))); 
+				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(MapGenerator.commonData.get("TO")));
+				message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(MapGenerator.commonData.get("CC")));
+				message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(MapGenerator.commonData.get("BCC")));
+				message.setSubject(MapGenerator.commonData.get("Summary"));
+				String msg = "Hi, \n\n\n Please find the Test Execution Report Below for '"+summaryDescription+"'";
+				msg = msg + "\n\n\n Total Scripts Executed : "+ (testNo-1);
+				msg = msg + "\n Passed Scripts               : "+ totalpassedScripts;
+				msg = msg + "\n Failed Scripts                : "+ totalfailedScripts + "  (including valid/invalid failures)";
+				msg = msg + "\n\n\n Please find the attached document for more details";
+				
+				BodyPart messageBodyPart = new MimeBodyPart();
+				messageBodyPart.setText(msg);
+				
+				Multipart multipart = new MimeMultipart();
+				multipart.addBodyPart(messageBodyPart);
+				
+				messageBodyPart = new MimeBodyPart();
+		        DataSource source = new FileDataSource(HTMLSummaryReportPath);
+		        messageBodyPart.setDataHandler(new DataHandler(source));
+		        messageBodyPart.setFileName(HTMLSummaryReportPath);
+		        multipart.addBodyPart(messageBodyPart);
+		         
+		        message.setContent(multipart);
+				//send the message 
+				Transport.send(message);   
+				System.out.println("Email send successfully.");   
+			} 
+			catch (MessagingException e) { 
+				throw new RuntimeException(e); 
+			}
+		}
+
+	public static void mergeXMLReports()throws FileNotFoundException, TransformerException, ParserConfigurationException,SAXException,IOException{
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setValidating(false);
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document summaryDoc = db.parse(summaryReportPath);
+        Document detailedDoc = db.parse(detailedReportsPath);
+        System.out.println("Before Copy...");
+        //prettyPrint(doc2);
+        NodeList list = detailedDoc.getElementsByTagName("TestSteps");
+        Element element = (Element) detailedDoc.getFirstChild();
+        Node copiedNode = summaryDoc.importNode(detailedDoc.getFirstChild(), true);
+        summaryDoc.getFirstChild().appendChild(copiedNode);
+        System.out.println("After Copy...");
+        //prettyPrint(doc2);
+
+	}
+	
 }

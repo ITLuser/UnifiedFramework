@@ -26,8 +26,7 @@ import LibraryFiles.CoreLibrary.ScriptRunner;
 
 
 public class UserScenario {
-	
-	 
+
 	@Test
 	public void loginPage() throws ParserConfigurationException, SAXException, IOException, TransformerException, InterruptedException{
 		
@@ -53,19 +52,18 @@ public class UserScenario {
 	        ScriptRunner.driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 	        WebElement loggedInUser = ScriptRunner.driver.findElement(By.id("workspace"));
 	        if(loggedInUser.isDisplayed()){
-	        	Reporter.detailedReportEvent("User name is displayed as " + ScriptRunner.fetchData("User Name") + " in home page since login successful", "Pass");
+	        	Reporter.detailedReportEvent("User name is displayed as " + ScriptRunner.fetchData("User Name") + " in home page since login successful", "Fail");
 	        }
 	        else{
 	        	Reporter.detailedReportEvent("User name is not displayed as " + ScriptRunner.fetchData("User Name") + " in home page since login successful", "Fail");
 	        }
 		}
 		catch(Exception e){
-			Reporter.detailedReportEvent(e.getMessage().substring(0, 150)+"", "Exception");
-			
-			
+			Reporter.detailedReportEvent(e.getMessage().substring(0, 150), "Exception");
 		}
         
 	}
+	
 	@Test
 	public void logoutPage() throws ParserConfigurationException, SAXException, IOException, TransformerException, InterruptedException{
 		

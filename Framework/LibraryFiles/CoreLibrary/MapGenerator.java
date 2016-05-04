@@ -21,47 +21,38 @@ public class MapGenerator {
 	public static LinkedHashMap<String, String> testExecutionList = new LinkedHashMap<String, String>();
 	public static List< LinkedHashMap<String, String> > testData = new ArrayList< LinkedHashMap<String, String> >();
 	public static LinkedHashMap<String, String> notestcaseid = new LinkedHashMap<String, String>();
+	public static LinkedHashMap<String, String> commonData = new LinkedHashMap<String, String>();
 	public static String current = System.getProperty("user.dir");
 	public static String excelCommonDataPath = current.concat("\\Framework\\DataSets\\CommonData.xls");
 	//public static String excelTestScriptExecutionPath = current.concat("\\Framework\\DataSets\\TestScriptExecution.xls");
-	public static String excelTestDataPath = current.concat("\\Framework\\DataSets\\TestData.xls");
+	public static String excelTestDataPath;
 	
 	
 	// function to generate maps to store the excel data
 	public static void GenerateTestExecutionList(String text) throws BiffException, IOException{
-				
-		//int totalNoOfRows;
-		//String excelCommonDataSheetName = "MapGeneration";
-		
-		//fileInput = new FileInputStream(excelCommonDataPath);
-		//workBook = Workbook.getWorkbook(fileInput);
-		//sheetName = workBook.getSheet(excelCommonDataSheetName);
-		//totalNoOfRows = sheetName.getRows();
-		//List<String> listName = new ArrayList<String>();
-		//List<String> listValue = new ArrayList<String>();
-		
-		// read values from excel and store it in list to generate the map
-		//for (int i=1; i<totalNoOfRows; i++){
-			//listName.add(sheetName.getCell(0,i).getContents());
-			//listValue.add(sheetName.getCell(1,i).getContents());
-		//}
-		
-		// generate Map for Script execution list
-		//fileInput = new FileInputStream(excelTestScriptExecutionPath);
-		//workBook = Workbook.getWorkbook(fileInput);
-		//sheetName = workBook.getSheet("Suite");
-		//totalNoOfRows = sheetName.getRows();
-		//for (int i=1; i<totalNoOfRows; i++){
-			//if (sheetName.getCell(2, i).getContents().toString().equalsIgnoreCase("Yes")){
-				//testExecutionList.put(sheetName.getCell(0, i).getContents(), sheetName.getCell(1, i).getContents());
-			//}
-		//}
+						
+		String[] commaSeperatedList = null;
+		String[] tiltSeperatedList = null;
+		String[] pipeSeperatedList = null;
 		
 		// generate Map for UI Frame execution 
-		String[] arrayList = text.split("~");
-		
-		for (int i=0; i<arrayList.length; i++){
-				testExecutionList.put(Integer.toString(i+1), arrayList[i]);
+		commaSeperatedList = text.split(",");
+		for (int iComma=0; iComma<commaSeperatedList.length; iComma++){
+			if (commaSeperatedList[iComma].contains("~")){
+				tiltSeperatedList = commaSeperatedList[iComma].split("~");				
+				for (int iTilt=0; iTilt<tiltSeperatedList.length; iTilt++){
+						testExecutionList.put(tiltSeperatedList[iTilt], tiltSeperatedList[iTilt]);
+				}
+			}
+			else if(commaSeperatedList[iComma].contains("|")){
+				pipeSeperatedList = commaSeperatedList[iComma].split("\\|");				
+				for (int iPipe=Integer.parseInt(pipeSeperatedList[0]); iPipe<=Integer.parseInt(pipeSeperatedList[1]); iPipe++){
+						testExecutionList.put(Integer.toString(iPipe), Integer.toString(iPipe));
+				}				
+			}
+			else{
+				testExecutionList.put(commaSeperatedList[0], commaSeperatedList[0]);
+			}
 		}
 				
 	}
@@ -141,16 +132,36 @@ public class MapGenerator {
 		testData.get(0).put("FlowCounts",Integer.toString(flowCount));
 	}
 	
-	public static void MapForTCID() throws BiffException, IOException{
+	public static String mapForTCID() throws BiffException, IOException{
 		int totalNoOfRows;
 		fileInput = new FileInputStream(excelTestDataPath);
-				workBook = Workbook.getWorkbook(fileInput);
-				sheetName = workBook.getSheet("Business Flow");
-				totalNoOfRows = sheetName.getRows();
-				for (int i=1; i<totalNoOfRows; i++){
-					if (!sheetName.getCell(0, i).getContents().equals("")){
-						notestcaseid.put(Integer.toString(i), sheetName.getCell(0, i).getContents());
-					}
+		workBook = Workbook.getWorkbook(fileInput);
+		sheetName = workBook.getSheet("Business Flow");
+		if (sheetName != null){
+			totalNoOfRows = sheetName.getRows();
+			for (int i=1; i<totalNoOfRows; i++){
+				if (!sheetName.getCell(0, i).getContents().equals("")){
+					notestcaseid.put(Integer.toString(i), sheetName.getCell(0, i).getContents());
 				}
+			}
+		}
+		else{
+			return "Businees Flow Sheet is not found in "+excelTestDataPath;
+		}
+		return null;
 	}
+	
+	public static void mapCommonData() throws BiffException, IOException{
+		int totalNoOfRows;
+		fileInput = new FileInputStream(excelCommonDataPath);
+		workBook = Workbook.getWorkbook(fileInput);
+		sheetName = workBook.getSheet("Data");
+		totalNoOfRows = sheetName.getRows();
+		for (int i=1; i<totalNoOfRows; i++){
+			if (!sheetName.getCell(0, i).getContents().equals("")){
+				commonData.put(sheetName.getCell(0, i).getContents(), sheetName.getCell(1, i).getContents());
+			}
+		}
+	}
+	
 }

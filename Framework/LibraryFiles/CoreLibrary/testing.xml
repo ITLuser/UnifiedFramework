@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="TestScriptFiles" verbose="1"><test name="framework"><classes><class name="TestScriptFiles.UserScenario"><methods><include name="logoutPage"/></methods></class></classes></test></suite>
+<suite name="TestScriptFiles" verbose="1"><test name="framework"><classes><class name="TestScriptFiles.UserScenario"><methods><include name="loginPage"/></methods></class></classes></test></suite>

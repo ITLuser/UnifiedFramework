@@ -14,7 +14,7 @@ import org.testng.TestNG;
 public class ScriptRunner {
 
 	public static WebDriver driver;
-	public static int dataIterationNumber = 1;
+	public static int dataIterationNumber;
 	
 	public static void driverSetup(){
 		System.setProperty("webdriver.chrome.driver","D:\\chromedriver_win32\\chromedriver.exe");
@@ -39,7 +39,7 @@ public class ScriptRunner {
 	public static void tearDown() {
 		if(driver!=null) {
 			System.out.println("Closing chrome browser");
-			driver.close();
+			driver.quit();
 		}
 	}
 	
