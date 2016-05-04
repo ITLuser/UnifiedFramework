@@ -37,6 +37,10 @@ th, td {
     background-color: #337ab7;
     border-color: #2e6da4;
 }
+.bgflow
+{
+	    color: #0099ff;
+}
 .bodycontainer
 {
     width: 90%;
@@ -60,6 +64,12 @@ th, td {
 	padding: 8px;
     margin: 0px;
     text-align: left;
+}
+.clickable{
+	cursor: pointer;
+}
+.clickable:hover{
+	background-color: #f7f7f7;
 }
 </style>
 </head>
@@ -152,6 +162,23 @@ th, td {
 													<td><b><xsl:value-of select="StepDesc"/></b></td>
 													<td><b><xsl:value-of select="StepStatus"/></b></td>
 													<td><b> -- </b></td>
+												</tr>
+											</xsl:if>
+											<xsl:if test="StepStatus = 'Exception'">
+												<tr class="bgdanger">
+													<td><b><xsl:value-of select="StepNumber"/></b></td>
+													<td><b><xsl:value-of select="StepDesc"/></b></td>
+													<xsl:variable name="hyperlink"><xsl:value-of select="ScreenshotimagePath" /></xsl:variable>
+													<td><a href="{$hyperlink}" style="color:#d9534f;"> <xsl:value-of select="@ScreenshotimagePath" /><b><xsl:value-of select="StepStatus"/></b></a></td>
+													<td><b><xsl:value-of select="StepTime"/></b></td>
+												</tr>
+											</xsl:if>
+											<xsl:if test="StepStatus = 'Interruption'">
+												<tr class="bgdanger">
+													<td><b><xsl:value-of select="StepNumber"/></b></td>
+													<td><b><xsl:value-of select="StepDesc"/></b></td>
+													<td><b><xsl:value-of select="StepStatus"/></b></td>
+													<td><b><xsl:value-of select="StepTime"/></b></td>
 												</tr>
 											</xsl:if>
 										</xsl:for-each>
