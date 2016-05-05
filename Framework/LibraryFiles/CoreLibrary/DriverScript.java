@@ -4,6 +4,7 @@ package LibraryFiles.CoreLibrary;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,10 +41,11 @@ public class DriverScript {
 		
 		MapGenerator MapGen = new MapGenerator();
 		Reporter Report = new Reporter();
-		
+		Date date = new Date();
 		
 		// Calling to Create Map for the list of Test Script Executions
 		//MapGen.GenerateTestExecutionList(testScripts);
+		Report.startTime = date;
 		Report.generateSummaryReport();
 		Set setOfKeys = MapGen.testExecutionList.keySet();
 		Iterator iterator = setOfKeys.iterator();
@@ -80,15 +82,15 @@ public class DriverScript {
 			}
 			
 			ScriptRunner.tearDown();
-			//Report.generateDetailedHTML();
 			Report.summaryReportEvent();
+			Report.generateSummaryHTML();
 			cleanup();
 		}
-
-		Report.generateSummaryHTML();
+		
 		if (hasToSendMail == true){
 			Report.sendMail();
 		}
+		Report.reportsCleanUp();
 		
 	}
 	
