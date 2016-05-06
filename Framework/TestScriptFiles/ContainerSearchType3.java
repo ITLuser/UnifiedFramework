@@ -18,6 +18,8 @@ public class ContainerSearchType3 {
 	
 	@Test
 	public void ShipVisualizerProfile()throws ParserConfigurationException, SAXException, IOException, TransformerException, InterruptedException{
+		
+		try{
 		ScriptRunner.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	//Enter Container ID (For Eg- CZZU0400185)
         WebElement ListedOptions = ScriptRunner.driver.findElement(By.xpath(".//*[@id='equipmentTypeIsoCode']/div/div/div/button"));
@@ -55,7 +57,11 @@ Reporter.detailedReportEvent("Any One Option(e.g- 22T0) from the displayed List 
         else{
         	Reporter.detailedReportEvent("Un-Saved Search 1 Panel is not displayed", "Fail");
         }
-       
+		}
+        catch(Exception e){
+			Reporter.detailedReportEvent(e.getMessage().substring(0, 150)+"", "Exception");
+			       
+}
 	
 }
 }

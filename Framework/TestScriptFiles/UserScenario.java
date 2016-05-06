@@ -52,7 +52,7 @@ public class UserScenario {
 	        ScriptRunner.driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 	        WebElement loggedInUser = ScriptRunner.driver.findElement(By.id("workspace"));
 	        if(loggedInUser.isDisplayed()){
-	        	Reporter.detailedReportEvent("User name is displayed as " + ScriptRunner.fetchData("User Name") + " in home page since login successful", "Fail");
+	        	Reporter.detailedReportEvent("User name is displayed as " + ScriptRunner.fetchData("User Name") + " in home page since login successful", "Pass");
 	        }
 	        else{
 	        	Reporter.detailedReportEvent("User name is not displayed as " + ScriptRunner.fetchData("User Name") + " in home page since login successful", "Fail");
@@ -70,14 +70,14 @@ public class UserScenario {
 		try{
         // Enter user id
 		ScriptRunner.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        WebElement loggedUser = ScriptRunner.driver.findElement(By.xpath("html/body/div[4]/div[1]/div/div[5]/div/div/span[2]"));
+        WebElement loggedUser = ScriptRunner.driver.findElement(By.xpath(".//*[@id='xv-app-container']/div[2]/div/div[5]/div/div"));
         loggedUser.click();
         Reporter.detailedReportEvent("Admin Carrier clicked", "Pass");
         
         ScriptRunner.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        WebElement signOut = ScriptRunner.driver.findElement(By.xpath("html/body/div[4]/div[1]/div/div[5]/div/ul/li[6]/a"));
+        WebElement signOut = ScriptRunner.driver.findElement(By.xpath(".//*[@id='xv-app-container']/div[2]/div/div[5]/div/ul/li[6]/a"));
         signOut.click();
-        Reporter.detailedReportEvent("logout clicked", "Pass");
+        Reporter.detailedReportEvent("logout clicked", "Fail");
         
         ScriptRunner.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         WebElement loginuserNamefield = ScriptRunner.driver.findElement(By.id("login-user-email"));

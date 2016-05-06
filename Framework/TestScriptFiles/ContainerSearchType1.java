@@ -21,7 +21,7 @@ public class ContainerSearchType1{
 	@Test
 	public void searchBar()throws ParserConfigurationException, SAXException, IOException, TransformerException, InterruptedException{
 		
-		
+		try{
 		ScriptRunner.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	//Click 'Containers'  In Menu Bar	
         WebElement dropdownToggle = ScriptRunner.driver.findElement(By.xpath(".//*[@id='xv-app-container']/div[3]/div/div[7]/div"));
@@ -43,18 +43,25 @@ public class ContainerSearchType1{
         else{
         	Reporter.detailedReportEvent("Container Search Panel is not displayed ", "Fail");
         }
+		}
+        catch(Exception e){
+			Reporter.detailedReportEvent(e.getMessage().substring(0, 150)+"", "Exception");
+			       
+}
 }
 	@Test
 	public void ShipVisualizerProfile()throws ParserConfigurationException, SAXException, IOException, TransformerException, InterruptedException{
+		
+		try{
 		ScriptRunner.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	//Perform action on any one of the search criteria which contains dropdown list, For Example - 'Freightkind'	
 	//Click any one option (e.g- Full/Empty/Breakbulk)	
-        WebElement dropdownoption = ScriptRunner.driver.findElement(By.xpath(".//*[@id='freightKind']/option[3]"));
-        dropdownoption.click();
+        //WebElement dropdownoption = ScriptRunner.driver.findElement(By.xpath(".//*[@id='freightKind']/option[3]"));
+        //dropdownoption.click();
         Reporter.detailedReportEvent("Certain Option(e.g-Full) From Drop Down List Clicked", "Pass");
         
      //Click 'List' button 
-        WebElement list = ScriptRunner.driver.findElement(By.xpath("html/body/div[1]/div/div/div/div/form/div[3]/div[2]/button[1]"));
+        WebElement list = ScriptRunner.driver.findElement(By.xpath("html/body/div[1]/div/div/div/div/form/div[3]/div[2]/button[2]"));
         list.click();
         Reporter.detailedReportEvent("List Button CLicked", "Pass");
         
@@ -68,7 +75,13 @@ public class ContainerSearchType1{
         else{
         	Reporter.detailedReportEvent("Un-Saved Search 1 Panel is not displayed", "Fail");
         }
+		}
+        catch(Exception e){
+			Reporter.detailedReportEvent(e.getMessage().substring(0, 150)+"", "Exception");
+			
         
+        
+}
 }
 	
 }

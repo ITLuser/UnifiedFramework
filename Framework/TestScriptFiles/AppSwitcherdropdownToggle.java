@@ -49,13 +49,9 @@ public class AppSwitcherdropdownToggle{
 		
 		}
 		catch(Exception e){
-			Reporter.detailedReportEvent(e.getMessage().substring(0, 150)+"", "Exception");
-			
-        
-        
+			Reporter.detailedReportEvent(e.getMessage().substring(0, 150)+"", "Exception");        
 }
-	}
-	
+}	
 }
 
 

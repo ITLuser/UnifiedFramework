@@ -17,6 +17,8 @@ import LibraryFiles.CoreLibrary.ScriptRunner;
 public class PortCall {
 	@Test 
 	public void ShipProfileToolbar()throws ParserConfigurationException, SAXException, IOException, TransformerException, InterruptedException{
+		
+		try{
 		ScriptRunner.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		
 	  //Click 'Select Call'	
@@ -40,6 +42,10 @@ public class PortCall {
         else{
         	Reporter.detailedReportEvent("Ship Profile for the particular port is not displayed ", "Fail");
         }
+		}
+		catch(Exception e){
+			Reporter.detailedReportEvent(e.getMessage().substring(0, 150), "Exception");
+		}
         
         Thread.sleep(5000);
 }
