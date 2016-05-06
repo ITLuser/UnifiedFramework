@@ -9,11 +9,13 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -76,6 +78,8 @@ public class Reporter {
 	public static String TestID;
 	public static String TestDescription;
 	public static String testStartTime;
+	public static Date startTime;
+	public static Date endTime;
 	public static String testEndTime;
 	public static String HTMLReportPath;
 	public static String HTMLSummaryReportPath;
@@ -127,7 +131,7 @@ public class Reporter {
 		Element teststarttime = doc.createElement("testStartTime");
 		teststarttime.appendChild(doc.createTextNode(dateFormat.format(date)));
 		testDetails.appendChild(teststarttime);
-		testStartTime = dateFormat.format(date);
+		testStartTime = dateFormat.format(date);		
 		
 		Element testduration = doc.createElement("testDuration");
 		testduration.appendChild(doc.createTextNode("Need to incorporate"));
@@ -384,6 +388,23 @@ public class Reporter {
 
 		root.appendChild(testDetails);
 		
+		endTime = date;		
+		
+		long durationTemp = endTime.getTime() - startTime.getTime();
+		long durationInMinutes = TimeUnit.MILLISECONDS.toMinutes(durationTemp);
+
+		nodes = doc.getElementsByTagName("Details");
+		
+		Node node = nodes.item(0);
+		NodeList childs = node.getChildNodes();
+		for (int i = 0; i<childs.getLength(); i++){
+			node = childs.item(i);
+			if ("testDuration".equals(node.getNodeName())) {
+				node.setTextContent(Long.toString(durationInMinutes)+" Minutes");
+				break;
+			}
+		}
+		
 		testNo++;
 		if (testStatus.equals("Pass")){
 			totalpassedScripts++;
@@ -413,12 +434,13 @@ public class Reporter {
 	    transformer.transform (new javax.xml.transform.stream.StreamSource (summaryReportPath),
 	    		new javax.xml.transform.stream.StreamResult ( new FileOutputStream(exceutionReportFolder + "\\SummaryReport.html")));
 
-	    HTMLSummaryReportPath = exceutionReportFolder + "\\SummaryReport.html";
-	    
+	    HTMLSummaryReportPath = exceutionReportFolder + "\\SummaryReport.html";	    
+		
+	}
+	
+	public static void reportsCleanUp (){
 		File file = new File(summaryReportPath); 
 		file.delete();
-
-		
 	}
 	
 	public static void captureScreenshot(String StepNo) throws IOException{		
