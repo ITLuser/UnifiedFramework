@@ -91,6 +91,12 @@ th, td {
 						<td width="10%"><b>MachineName</b></td>
 						<td width="15%"><b><xsl:value-of select="testMachineName"/></b></td>
 					</tr>
+					<tr>
+						<td width="10%"><b>Data Source</b></td>
+						<td width="30%"><b><xsl:value-of select="dataSource"/></b></td>
+						<td width="10%"><b>Status</b></td>
+						<td width="20%"><b><xsl:value-of select="suiteStatus"/></b></td>
+					</tr>					
 				</xsl:for-each>
 			</table>
 		</div>

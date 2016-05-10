@@ -4,9 +4,15 @@ import java.awt.Window;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
+import com.fourspaces.couchdb.Database;
+import com.fourspaces.couchdb.Document;
+import com.fourspaces.couchdb.Session;
+import com.fourspaces.couchdb.ViewResults;
 import com.sun.jna.platform.win32.Guid.GUID;
 
 import jxl.read.biff.BiffException;
@@ -26,6 +32,7 @@ public class MapGenerator {
 	public static String excelCommonDataPath = current.concat("\\Framework\\DataSets\\CommonData.xls");
 	//public static String excelTestScriptExecutionPath = current.concat("\\Framework\\DataSets\\TestScriptExecution.xls");
 	public static String excelTestDataPath;
+	public static String couchdbTestDatabase;
 	
 	
 	// function to generate maps to store the excel data
@@ -133,20 +140,33 @@ public class MapGenerator {
 	}
 	
 	public static String mapForTCID() throws BiffException, IOException{
-		int totalNoOfRows;
-		fileInput = new FileInputStream(excelTestDataPath);
-		workBook = Workbook.getWorkbook(fileInput);
-		sheetName = workBook.getSheet("Business Flow");
-		if (sheetName != null){
-			totalNoOfRows = sheetName.getRows();
-			for (int i=1; i<totalNoOfRows; i++){
-				if (!sheetName.getCell(0, i).getContents().equals("")){
-					notestcaseid.put(Integer.toString(i), sheetName.getCell(0, i).getContents());
+		if (MapGenerator.commonData.get("DataSource").equalsIgnoreCase("Excel")){
+			int totalNoOfRows;
+			fileInput = new FileInputStream(excelTestDataPath);
+			workBook = Workbook.getWorkbook(fileInput);
+			sheetName = workBook.getSheet("Business Flow");
+			if (sheetName != null){
+				totalNoOfRows = sheetName.getRows();
+				for (int i=1; i<totalNoOfRows; i++){
+					if (!sheetName.getCell(0, i).getContents().equals("")){
+						notestcaseid.put(Integer.toString(i), sheetName.getCell(0, i).getContents());
+					}
 				}
 			}
-		}
-		else{
-			return "Businees Flow Sheet is not found in "+excelTestDataPath;
+			else{
+				return "Businees Flow Sheet is not found in "+excelTestDataPath;
+			}
+		}else if (MapGenerator.commonData.get("DataSource").equalsIgnoreCase("CouchDB")){
+			Session testDbSession = new Session("localhost", 5984);
+			Database testDatabase = testDbSession.getDatabase(couchdbTestDatabase);
+			ViewResults testDataViewResults = testDatabase.getAllDocuments();
+			List<Document> testDocuments = testDataViewResults.getResults();
+			int i = 1;
+			for(Document document: testDocuments){				
+				String id = document.getJSONObject().getString("id");
+				notestcaseid.put(Integer.toString(i), id);
+				i++;
+			}
 		}
 		return null;
 	}
@@ -162,6 +182,38 @@ public class MapGenerator {
 				commonData.put(sheetName.getCell(0, i).getContents(), sheetName.getCell(1, i).getContents());
 			}
 		}
+	}
+	
+	public static void GenerateCouchDBTestData(String TestScriptID) throws BiffException, IOException{
+		
+		LinkedHashMap<String, String> singleTestDataMap = new LinkedHashMap<String, String>();
+		//singleTestDataMap = null;
+		int flowCount = 0;
+		
+		Session testDbSession = new Session("localhost", 5984);
+		Database testDatabase = testDbSession.getDatabase(couchdbTestDatabase);
+		Document testDataDocument = testDatabase.getDocument(TestScriptID);
+		Set<?> CouchKey =  testDataDocument.keySet();
+		Iterator<?> iterator = CouchKey.iterator();
+		while (iterator.hasNext()){
+			String key = iterator.next().toString();
+			String value = testDataDocument.get(key).toString();
+/*			System.out.println("Key "+key );
+			System.out.println("Value "+testDataDocument.get(key) );*/
+			if (!key.equalsIgnoreCase("BusinessFlows")){
+				singleTestDataMap.put(key, value);
+			}
+			if (key.equalsIgnoreCase("BusinessFlows")){
+				String flowValues = (String) testDataDocument.get(key);
+				String [] temp = flowValues.split(";");
+				flowCount = temp.length;
+				for (int i = 0; i < temp.length; i++){
+					singleTestDataMap.put("Flow"+(i+1), temp[i]);
+				}
+			}
+		}
+		testData.add(singleTestDataMap);
+		testData.get(0).put("FlowCounts",Integer.toString(flowCount));
 	}
 	
 }

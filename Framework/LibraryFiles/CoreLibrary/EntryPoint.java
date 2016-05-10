@@ -8,8 +8,10 @@ public class EntryPoint {
 
 	public static void main(String[] args) throws BiffException, IOException {
 
+/*		MapGenerator.GenerateCouchDBTestData("1");
+		MapGenerator.GenerateCouchDBTestData("2");*/
 		MapGenerator.mapCommonData();
-		//creating object for UI Simulator class 
+		//creating object for UI Simulator class
 		UISimulator uiSimulator = new UISimulator();
 		uiSimulator.setVisible(true);
 		

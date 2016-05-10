@@ -23,6 +23,10 @@ import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JTextPane;
 
+import com.fourspaces.couchdb.Database;
+import com.fourspaces.couchdb.Document;
+import com.fourspaces.couchdb.Session;
+import com.fourspaces.couchdb.ViewResults;
 import com.gargoylesoftware.htmlunit.TextPage;
 
 public class UISimulator extends JFrame {
@@ -41,7 +45,7 @@ public class UISimulator extends JFrame {
 		String tempDataSetPath = current.concat("\\Framework\\DataSets");
 		setTitle("Unified Framework");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 500);
+		setBounds(100, 100, 600, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -57,8 +61,11 @@ public class UISimulator extends JFrame {
 		btnExecute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
 				try {
-					//Reporter.sendMail();
-					MapGenerator.excelTestDataPath = current.concat("\\Framework\\DataSets\\").concat((String) comboBox.getSelectedItem());
+					if (MapGenerator.commonData.get("DataSource").equalsIgnoreCase("Excel")){
+						MapGenerator.excelTestDataPath = current.concat("\\Framework\\DataSets\\").concat((String) comboBox.getSelectedItem());
+					}else if (MapGenerator.commonData.get("DataSource").equalsIgnoreCase("CouchDB")){
+						MapGenerator.couchdbTestDatabase = (String) comboBox.getSelectedItem();
+					}
 					String warning = MapGenerator.mapForTCID();
 					if (warning != null){
 						JOptionPane
@@ -123,7 +130,7 @@ public class UISimulator extends JFrame {
 			
 		});
 		btnExecute.setFont(new Font("Calibri", Font.BOLD, 13));
-		btnExecute.setBounds(198, 400, 89, 23);
+		btnExecute.setBounds(198, 370, 89, 23);
 		contentPane.add(btnExecute);
 		
 		JButton btnCancel = new JButton("Cancel");
@@ -134,7 +141,7 @@ public class UISimulator extends JFrame {
 			}
 		});
 		btnCancel.setFont(new Font("Calibri", Font.BOLD, 13));
-		btnCancel.setBounds(314, 400, 89, 23);
+		btnCancel.setBounds(314, 370, 89, 23);
 		contentPane.add(btnCancel);
 		
 		JLabel lblDataSheet = new JLabel("Data Sheet:");
@@ -145,12 +152,24 @@ public class UISimulator extends JFrame {
 		
 		comboBox.setFont(new Font("Calibri", Font.ITALIC, 13));
 		List<String> results = new ArrayList<String>();
-		File[] files = new File(tempDataSetPath).listFiles();
-		//If this pathname does not denote a directory, then listFiles() returns null. 
-		for (File file : files) {
-		    if (file.isFile()) {
-		    	results.add(file.getName());
-		    }
+		if (MapGenerator.commonData.get("DataSource").equalsIgnoreCase("Excel")){
+			File[] files = new File(tempDataSetPath).listFiles();
+			//If this pathname does not denote a directory, then listFiles() returns null. 
+			for (File file : files) {
+			    if (file.isFile()) {
+			    	results.add(file.getName());
+			    }
+			}
+		}else if (MapGenerator.commonData.get("DataSource").equalsIgnoreCase("CouchDB")){
+			Session testDbSession = new Session("localhost", 5984);
+			//Database testDatabase = testDbSession.getDatabase("xvelasystems");
+			results = testDbSession.getDatabaseNames();
+	/*		ViewResults testDataViewResults = testDatabase.getAllDocuments();
+			List<Document> studentDocuments = testDataViewResults.getResults();
+			for(Document couchDocument: studentDocuments){
+				String id = couchDocument.getJSONObject().getString("id");
+				results.add(id);
+			}*/
 		}
 		comboBox.setModel(new DefaultComboBoxModel(results.toArray()));
 		comboBox.addActionListener(new ActionListener() {
@@ -218,6 +237,36 @@ public class UISimulator extends JFrame {
 		textField_Summary.setBounds(156, 296, 345, 28);
 		contentPane.add(textField_Summary);
 		textField_Summary.setColumns(10);
-				
+		
+/*		final JCheckBox killopenedBrowsers = new JCheckBox("Kill the Browsers before Run");
+		killopenedBrowsers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (killopenedBrowsers.isSelected()){
+					ScriptRunner.killBrowsersBeforeRun = true;
+				}
+				else{
+					ScriptRunner.killBrowsersBeforeRun = false;
+				}
+			}
+		});
+		//sendMail.setBounds(156, 296, 218, 23);
+		killopenedBrowsers.setBounds(156, 360, 200, 23);
+		contentPane.add(killopenedBrowsers);		
+
+		final JCheckBox killopenedBrowsersEach = new JCheckBox("Kill the Browsers before Each Run");
+		killopenedBrowsersEach.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (killopenedBrowsersEach.isSelected()){
+					ScriptRunner.killBrowsersBeforeEachRun = true;
+				}
+				else{
+					ScriptRunner.killBrowsersBeforeEachRun = false;
+				}
+			}
+		});
+		//sendMail.setBounds(156, 296, 218, 23);
+		killopenedBrowsersEach.setBounds(156, 390, 218, 23);
+		contentPane.add(killopenedBrowsersEach);*/
+		
 	}
 }

@@ -57,7 +57,11 @@ public class DriverScript {
 			// Generate Detailed Report temp file
 			//Report.generateDetailedReport(TestID,"GUI change");
 			// generate test data map inside a list for multiple iteration
-			MapGen.GenerateTestData(TestID);			
+			if (MapGen.commonData.get("DataSource").equalsIgnoreCase("Excel")){
+				MapGen.GenerateTestData(TestID);
+			}else if (MapGen.commonData.get("DataSource").equalsIgnoreCase("CouchDB")){
+				MapGen.GenerateCouchDBTestData(TestID);
+			}
 			
 			testDataList = MapGen.testData;
 			testDataMap = testDataList.get(0);
@@ -83,6 +87,7 @@ public class DriverScript {
 			
 			ScriptRunner.tearDown();
 			Report.summaryReportEvent();
+			Report.modifyXML("suiteStatus", "Completed");
 			Report.generateSummaryHTML();
 			cleanup();
 		}

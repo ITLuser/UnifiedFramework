@@ -302,6 +302,14 @@ public class Reporter {
 		testduration.appendChild(doc.createTextNode("Need to incorporate"));
 		suiteDetails.appendChild(testduration);
 		
+		Element dataSource = doc.createElement("dataSource");
+		dataSource.appendChild(doc.createTextNode(MapGenerator.commonData.get("DataSource")));
+		suiteDetails.appendChild(dataSource);
+		
+		Element suiteStatus = doc.createElement("suiteStatus");
+		suiteStatus.appendChild(doc.createTextNode("In Progress"));
+		suiteDetails.appendChild(suiteStatus);
+		
 		rootElement.appendChild(suiteDetails);		
 		
 		// write the content into xml file
@@ -518,6 +526,32 @@ public class Reporter {
         System.out.println("After Copy...");
         //prettyPrint(doc2);
 
+	}
+	
+	public static void modifyXML(String xmlNode, String nodeValue) throws ParserConfigurationException, SAXException, IOException, TransformerException{
+		
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document doc = docBuilder.parse(summaryReportPath);
+		
+		NodeList nodes = doc.getElementsByTagName("Details");
+		
+		Node node = nodes.item(0);
+		NodeList childs = node.getChildNodes();
+		for (int i = 0; i<childs.getLength(); i++){
+			node = childs.item(i);
+			if (xmlNode.equals(node.getNodeName())) {
+				node.setTextContent(nodeValue);
+				break;
+			}
+		}
+		
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(new File(summaryReportPath));
+		transformer.transform(source, result);
+		
 	}
 	
 }
