@@ -463,8 +463,8 @@ public class Reporter {
 
 	public static void sendMail(){
 		//change accordingly	
-		final String username = "vasantham.puyalnithi@idealtechlabs.com"; 
-		final String password = "Kingsword_2";
+		final String username = ""; 
+		final String password = "";
 		//Set properties 
 		Properties props = new Properties(); 
 		props.put("mail.smtp.auth", "true"); 
